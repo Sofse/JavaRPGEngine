@@ -14,13 +14,13 @@ import me.rpgengine.xam4lor.engine.structure.Rectangle;
  * Rendu de la fenêtre
  * 
  * <br><br>Valeurs de zIndex dans les fonctions de rendu :
- * <br>-       zIndex > 0     en général
- * <br>-       zIndex = 10    pour les tiles de background
- * <br>-       zIndex = 15    pour les tiles au dessus du background
- * <br>- 200 > zIndex > 100   pour toutes les entités
- * <br>-       zIndex = 210   pour tous les rectangles des entités de debug
- * <br>-       zIndex = 215   pour toutes les tiles au dessus des entités
- * <br>-       zIndex = 300   pour tous les graphiques de GUI ou au dessus de tout
+ * <br>-        zIndex > 0      en général
+ * <br>-        zIndex = 10     pour les tiles de background
+ * <br>-        zIndex = 15     pour les tiles au dessus du background
+ * <br>- 5000 > zIndex > 1000   pour toutes les entités
+ * <br>-        zIndex = 5010   pour tous les rectangles des entités de debug
+ * <br>-        zIndex = 5015   pour toutes les tiles au dessus des entités
+ * <br>-        zIndex = 6100   pour tous les graphiques de GUI ou au dessus de tout
  */
 public class RenderHandler {
 	private BufferedImage view;
@@ -53,6 +53,10 @@ public class RenderHandler {
 		
 		pixels 		 = ((DataBufferInt) view.getRaster().getDataBuffer()).getData();
 		pixelsZIndex = new int[pixels.length];
+		
+		for (int i = 0; i < pixelsZIndex.length; i++) {
+			pixelsZIndex[i] = 0;
+		}
 	}
 
 	/**
@@ -201,8 +205,7 @@ public class RenderHandler {
 	public void clear() {
 		for(int i = 0; i < pixels.length; i++) {
 			this.pixels[i] = 0;
+			this.pixelsZIndex[i] = 0;
 		}
-		
-		this.pixelsZIndex = this.pixels;
 	}
 }

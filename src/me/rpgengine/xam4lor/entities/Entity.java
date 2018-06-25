@@ -71,9 +71,9 @@ public abstract class Entity implements GameObject {
 	@Override
 	public void render(RenderHandler renderer, int xZoom, int yZoom) {
 		if(this.animatedSprite == null || this.showRectangle)
-			renderer.renderRectangle(this.entityRectangle, xZoom, yZoom, 210);
+			renderer.renderRectangle(this.entityRectangle, xZoom, yZoom, 5010);
 		else
-			renderer.renderSprite(this.animatedSprite, this.entityRectangle.x, this.entityRectangle.y, xZoom, yZoom, 100);
+			renderer.renderSprite(this.animatedSprite, this.entityRectangle.x, this.entityRectangle.y, xZoom, yZoom, 7500 + this.entityRectangle.y / Tiles.TILE_SIZE / yZoom);
 	}
 	
 	

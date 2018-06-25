@@ -17,8 +17,6 @@ public class Player extends MovingEntity {
 	 */
 	public Player(AnimatedSprite sprite) {
 		super("player", sprite, 8, 3, 0, 0, 16, 16);
-		
-		// this.showRectangle = true;
 	}
 	
 
