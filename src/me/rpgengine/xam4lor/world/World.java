@@ -8,31 +8,68 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import me.rpgengine.xam4lor.engine.Game;
 import me.rpgengine.xam4lor.engine.render.RenderHandler;
+import me.rpgengine.xam4lor.engine.structure.GameObject;
 import me.rpgengine.xam4lor.engine.structure.Rectangle;
+import me.rpgengine.xam4lor.entities.Entities;
 
 /**
  * Création d'un monde
  */
-public class World {
+public class World implements GameObject {
 	private Tiles tileSet;
 	private int fillTileID = -1;
 
-	private ArrayList<MappedTile> mappedTiles = new ArrayList<MappedTile>();
-	private HashMap<Integer, String> comments = new HashMap<Integer, String>();
+	private ArrayList<MappedTile> mappedTiles;
+	private HashMap<Integer, String> comments;
+	
+	private Entities entities;
 
 	private File mapFile;
 
 	/**
 	 * Création d'un monde
+	 * @param game
 	 * @param mapFile
-	 * 	Fichier de la map
+	 * 	Fichier du monde de base
 	 * @param tileSet
 	 * 	Liste des tiles
 	 */
-	public World(File mapFile, Tiles tileSet) {
-		this.mapFile = mapFile;
+	public World(Game game, File mapFile, Tiles tileSet) {
 		this.tileSet = tileSet;
+		this.entities = new Entities(game);
+		
+		this.loadWorld(mapFile);
+	}
+
+	
+	
+	@Override
+	public void update(Game game) {
+		this.entities.update(game);
+	}
+	
+	@Override
+	public void render(RenderHandler renderer, int xZoom, int yZoom) {
+		this.renderWorld(renderer, xZoom, yZoom);
+		
+		this.entities.render(renderer, xZoom, yZoom);
+	}
+	
+	
+	
+	
+	/**
+	 * Charge un monde
+	 * @param mapFile
+	 * 	Fichier du monde
+	 */
+	public void loadWorld(File mapFile) {
+		this.mapFile = mapFile;
+		
+		this.mappedTiles = new ArrayList<MappedTile>();
+		this.comments = new HashMap<Integer, String>();
 		
 		try {
 			Scanner scanner = new Scanner(mapFile);
@@ -69,7 +106,40 @@ public class World {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	/**
+	 * Rendu du monde
+	 * @param renderer
+	 * 	Renderer principal
+	 * @param xZoom
+	 * 	Zoom en X
+	 * @param yZoom
+	 * 	Zoom en Y
+	 */
+	private void renderWorld(RenderHandler renderer, int xZoom, int yZoom) {
+		int tileWidth = Tiles.TILE_SIZE * xZoom;
+		int tileHeight = Tiles.TILE_SIZE * yZoom;
 
+		if(fillTileID >= 0) {
+			Rectangle camera = renderer.getCamera();
+
+			for(int y = camera.y - tileHeight - (camera.y % tileHeight); y < camera.y + camera.h; y+= tileHeight) {
+				for(int x = camera.x - tileWidth - (camera.x % tileWidth); x < camera.x + camera.w; x+= tileWidth) {
+					tileSet.renderTile(fillTileID, renderer, x, y, xZoom, yZoom);
+				}
+			}
+		}
+
+		for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++) {
+			MappedTile mappedTile = mappedTiles.get(tileIndex);
+			tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
+		}
+	}
+	
+	
+	
 	/**
 	 * Modification d'une tile
 	 * @param tileX
@@ -82,13 +152,10 @@ public class World {
 	public void setTile(int tileX, int tileY, int tileID) {
 		boolean foundTile = false;
 
-		for(int i = 0; i < mappedTiles.size(); i++) {
-			MappedTile mappedTile = mappedTiles.get(i);
-			if(mappedTile.x == tileX && mappedTile.y == tileY) {
-				mappedTile.id = tileID;
-				foundTile = true;
-				break;
-			}
+		MappedTile mappedTile = mappedTiles.get(tileID);
+		if(mappedTile.x == tileX && mappedTile.y == tileY) {
+			mappedTile.id = tileID;
+			foundTile = true;
 		}
 
 		if(!foundTile)
@@ -144,35 +211,6 @@ public class World {
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Render de la carte
-	 * @param renderer
-	 * 	Renderer du jeu
-	 * @param xZoom
-	 * 	Zoom en X
-	 * @param yZoom
-	 * 	Zoom en Y
-	 */
-	public void render(RenderHandler renderer, int xZoom, int yZoom) {
-		int tileWidth = Tiles.TILE_SIZE * xZoom;
-		int tileHeight = Tiles.TILE_SIZE * yZoom;
-
-		if(fillTileID >= 0) {
-			Rectangle camera = renderer.getCamera();
-
-			for(int y = camera.y - tileHeight - (camera.y % tileHeight); y < camera.y + camera.h; y+= tileHeight) {
-				for(int x = camera.x - tileWidth - (camera.x % tileWidth); x < camera.x + camera.w; x+= tileWidth) {
-					tileSet.renderTile(fillTileID, renderer, x, y, xZoom, yZoom);
-				}
-			}
-		}
-
-		for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++) {
-			MappedTile mappedTile = mappedTiles.get(tileIndex);
-			tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
 		}
 	}
 

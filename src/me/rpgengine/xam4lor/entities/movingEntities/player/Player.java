@@ -1,8 +1,9 @@
-package me.rpgengine.xam4lor.entities;
+package me.rpgengine.xam4lor.entities.movingEntities.player;
 
 import me.rpgengine.xam4lor.engine.Game;
 import me.rpgengine.xam4lor.engine.render.sprites.AnimatedSprite;
 import me.rpgengine.xam4lor.engine.structure.Rectangle;
+import me.rpgengine.xam4lor.entities.movingEntities.MovingEntity;
 import me.rpgengine.xam4lor.listener.KeyBoardListener;
 
 /**
