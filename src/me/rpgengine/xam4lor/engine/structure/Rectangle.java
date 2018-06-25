@@ -50,7 +50,7 @@ public class Rectangle {
 	 * Classe d'un rectangle
 	 */
 	public Rectangle() {
-		this(0,0,0,0);
+		this(0, 0, 0, 0);
 	}
 
 	/**

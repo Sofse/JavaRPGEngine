@@ -45,7 +45,7 @@ public class SpriteSheet {
 	 * @param spriteSizeY
 	 * 	Taille des sprites en Y
 	 */
-	public void loadSprites(int spriteSizeX, int spriteSizeY){
+	public void loadSprites(int spriteSizeX, int spriteSizeY) {
 		this.spriteSizeX = spriteSizeX;
 		loadedSprites = new Sprite[(SIZEX / spriteSizeX) * (SIZEY / spriteSizeY)];
 

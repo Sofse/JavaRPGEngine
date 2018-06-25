@@ -1,12 +1,13 @@
 package me.rpgengine.xam4lor.world;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import me.rpgengine.xam4lor.engine.Game;
 import me.rpgengine.xam4lor.engine.render.RenderHandler;
@@ -20,13 +21,10 @@ import me.rpgengine.xam4lor.entities.Entities;
 public class World implements GameObject {
 	private Tiles tileSet;
 	private int fillTileID = -1;
+	private String levelName;
 
 	private ArrayList<MappedTile> mappedTiles;
-	private HashMap<Integer, String> comments;
-	
 	private Entities entities;
-
-	private File mapFile;
 
 	/**
 	 * Création d'un monde
@@ -66,43 +64,31 @@ public class World implements GameObject {
 	 * 	Fichier du monde
 	 */
 	public void loadWorld(File mapFile) {
-		this.mapFile = mapFile;
-		
 		this.mappedTiles = new ArrayList<MappedTile>();
-		this.comments = new HashMap<Integer, String>();
 		
 		try {
-			Scanner scanner = new Scanner(mapFile);
-			int currentLine = 0;
-			while(scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				if(!line.startsWith("//")) {
-					if(line.contains(":")) {
-						String[] splitString = line.split(":");
-						if(splitString[0].equalsIgnoreCase("Fill")) {
-							fillTileID = Integer.parseInt(splitString[1]);
-							continue;
-						}
-					}
-
-
-					String[] splitString = line.split(",");
-					if(splitString.length >= 3) {
-						MappedTile mappedTile = new MappedTile(Integer.parseInt(splitString[0]),
-															   Integer.parseInt(splitString[1]),
-															   Integer.parseInt(splitString[2]));
-						mappedTiles.add(mappedTile);
-					}
-				}
-				else {
-					comments.put(currentLine, line);
-				}
-				currentLine++;
+			JSONObject level = new JSONObject(new String(Files.readAllBytes(mapFile.toPath()), "UTF-8"));
+			JSONArray tiles = level.getJSONArray("tiles");
+			JSONObject entities = level.getJSONObject("entities");
+			JSONArray npc = entities.getJSONArray("npc");
+			
+			this.fillTileID = level.getInt("fill_tile_ID");
+			this.levelName = level.getString("world_name");
+			
+			// Ajout des tiles
+			for (int i = 0; i < tiles.length(); i++) {
+				JSONObject tile = tiles.getJSONObject(i);
+				mappedTiles.add(new MappedTile(tile.getInt("id"), tile.getInt("x"), tile.getInt("y")));
 			}
 			
-			scanner.close();
+			// Ajout des entités
+			this.entities.clearEntities();
+			this.entities.addPlayer(entities.getJSONObject("player").getInt("x"), entities.getJSONObject("player").getInt("y"));
+			
+			for (int i = 0; i < npc.length(); i++)
+				this.entities.addEntity(npc.getJSONObject(i));
 		}
-		catch(FileNotFoundException e) {
+		catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -140,6 +126,8 @@ public class World implements GameObject {
 	
 	
 	
+	
+	
 	/**
 	 * Modification d'une tile
 	 * @param tileX
@@ -152,15 +140,37 @@ public class World implements GameObject {
 	public void setTile(int tileX, int tileY, int tileID) {
 		boolean foundTile = false;
 
-		MappedTile mappedTile = mappedTiles.get(tileID);
-		if(mappedTile.x == tileX && mappedTile.y == tileY) {
-			mappedTile.id = tileID;
-			foundTile = true;
+		try {
+			MappedTile mappedTile = mappedTiles.get(tileID);
+			if(mappedTile.x == tileX && mappedTile.y == tileY) {
+				mappedTile.id = tileID;
+				foundTile = true;
+			}
 		}
+		catch(IndexOutOfBoundsException e) {}
 
 		if(!foundTile)
 			mappedTiles.add(new MappedTile(tileID, tileX, tileY));
 	}
+	
+	/**
+	 * Retourne une tile via sa position
+	 * @param tileX
+	 * 	Position en X
+	 * @param tileY
+	 * 	Position en Y
+	 * @return la MappedTile à la position
+	 */
+	public MappedTile getTileAt(int tileX, int tileY) {
+		for (MappedTile mappedTile : this.mappedTiles)
+			if(mappedTile.x == tileX && mappedTile.y == tileY)
+				return mappedTile;
+		
+		return null;
+	}
+	
+	
+	
 
 	/**
 	 * Supression d'une tile
@@ -177,48 +187,15 @@ public class World implements GameObject {
 			}
 		}
 	}
-
-	/**
-	 * Sauvegarde la carte
-	 */
-	public void saveMap() {
-		try {
-			int currentLine = 0;
-			if(mapFile.exists()) 
-				mapFile.delete();
-			mapFile.createNewFile();
-
-			PrintWriter printWriter = new PrintWriter(mapFile);
-
-			if(fillTileID >= 0) {
-				if(comments.containsKey(currentLine)) {
-					printWriter.println(comments.get(currentLine));
-					currentLine++;
-				}
-				printWriter.println("Fill:" + fillTileID);
-			}
-
-			for(int i = 0; i < mappedTiles.size(); i++) {
-				if(comments.containsKey(currentLine))
-					printWriter.println(comments.get(currentLine));
-
-				MappedTile tile = mappedTiles.get(i);
-				printWriter.println(tile.id + "," + tile.x + "," + tile.y);
-				currentLine++;
-			}
-
-			printWriter.close();
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
+	
+	
 
 	/**
 	 * Tile ID dans le tileSet ainsi que les positions de la tile sur la carte
 	 */
-	class MappedTile {
-		public int id, x, y;
+	public class MappedTile {
+		private int id, x, y;
 		
 		/**
 		 * Tile ID dans le tileSet ainsi que les positions de la tile sur la carte
@@ -234,5 +211,29 @@ public class World implements GameObject {
 			this.x = x;
 			this.y = y;
 		}
+
+		/**
+		 * @return l'ID de la tile actuelle
+		 */
+		public int getID() {
+			return this.id;
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * @return la tile par défault (tile créée lors du premier appel à cette fonction)
+	 */
+	public int getDefaultTileID() {
+		return this.fillTileID;
+	}
+	
+	/**
+	 * @return le nom du monde
+	 */
+	public String getWorldName() {
+		return this.levelName;
 	}
 }

@@ -43,7 +43,7 @@ public class Tiles {
 			String tileName = tile.getString("tile_name");
 			
 			if(!this.tilesList.containsKey(id))
-				this.tilesList.put(id, new Tile(tileName, spriteSheet.getSprite(tile.getInt("x"), tile.getInt("y"))));
+				this.tilesList.put(id, new Tile(tileName, spriteSheet.getSprite(tile.getInt("x"), tile.getInt("y")), tile.getBoolean("solid")));
 			else
 				System.out.println("La tile à l'ID " + id + " du nom de '" + tileName + "' a le même ID qu'une autre Tile.");
 		}
@@ -71,7 +71,7 @@ public class Tiles {
 	 */
 	public void renderTile(int tileID, RenderHandler renderer, int xPosition, int yPosition, int xZoom, int yZoom) {
 		if(tileID >= 0 && tilesList.size() > tileID)
-			renderer.renderSprite(tilesList.get(tileID).sprite, xPosition, yPosition, xZoom, yZoom);
+			renderer.renderSprite(tilesList.get(tileID).sprite, xPosition, yPosition, xZoom, yZoom, 10);
 		else
 			System.out.println("TileID " + tileID + " is not within range " + tilesList.size() + ".");
 	}
@@ -82,6 +82,20 @@ public class Tiles {
 	public int size() {
 		return this.tilesList.size();
 	}
+	
+	
+	
+	
+	
+	/**
+	 * @param index
+	 * 	ID de la Tile
+	 * @return la tile voulue
+	 */
+	public Tile getTile(int index) {
+		return this.tilesList.get(index);
+	}
+	
 	
 	/**
 	 * @return les sprites des tiles
@@ -100,9 +114,10 @@ public class Tiles {
 	/**
 	 * Tile
 	 */
-	class Tile {
-		public String tileName;
-		public Sprite sprite;
+	public class Tile {
+		private String tileName;
+		private Sprite sprite;
+		private boolean solid;
 		
 		/**
 		 * Tile
@@ -110,10 +125,29 @@ public class Tiles {
 		 * 	Nom de la tile
 		 * @param sprite
 		 * 	Sprite de la tile
+		 * @param solid
+		 * 	true : la tile est solide
 		 */
-		public Tile(String tileName, Sprite sprite) {
+		public Tile(String tileName, Sprite sprite, boolean solid) {
 			this.tileName = tileName;
 			this.sprite = sprite;
+			this.solid = solid;
+		}
+		
+		
+		
+		/**
+		 * @return le nom de la Tile
+		 */
+		public String getTileName() {
+			return this.tileName;
+		}
+		
+		/**
+		 * @return true si la tile est solide
+		 */
+		public boolean isSolid() {
+			return this.solid;
 		}
 	}
 }

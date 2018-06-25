@@ -1,0 +1,30 @@
+{
+    "world_name" : "testLevel",
+    "fill_tile_ID" : 0,
+    "entities" : {
+        "player" : {
+            "x" : 1,
+            "y" : 1
+        },
+        "npc" : [
+            
+        ]
+    },
+    "tiles" : [
+        {
+            "id" : 2,
+            "x" : 0,
+            "y" : 0
+        },
+        {
+            "id" : 1,
+            "x" : 0,
+            "y" : 1
+        },
+        {
+            "id" : 1,
+            "x" : 0,
+            "y" : 2
+        }
+    ]
+}

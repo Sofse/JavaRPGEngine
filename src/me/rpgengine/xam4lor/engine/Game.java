@@ -2,7 +2,8 @@ package me.rpgengine.xam4lor.engine;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,6 +37,16 @@ public class Game extends JFrame implements Runnable {
 	 * Couleur ALPHA
 	 */
 	public static int alpha = 0xFFFF00DC;
+	
+	/**
+	 * Zoom en X
+	 */
+	public int xZoom = 3;
+	
+	/**
+	 * Zoom en Y
+	 */
+	public int yZoom = 3;
 
 	
 	private Canvas canvas;
@@ -49,8 +60,7 @@ public class Game extends JFrame implements Runnable {
 	private KeyBoardListener keyListener = new KeyBoardListener(this);
 	private MouseEventListener mouseListener = new MouseEventListener(this);
 
-	private int xZoom = 3;
-	private int yZoom = 3;
+	
 
 	
 	/**
@@ -60,7 +70,7 @@ public class Game extends JFrame implements Runnable {
 		this.createWindow();
 		this.loadAssetsAndTiles();
 
-		world = new World(this, new File("res/levels/test_world.txt"), tiles);
+		world = new World(this, new File("res/config/levels/testLevel.txt"), tiles);
 		
 
 		//Add Listeners
@@ -108,9 +118,10 @@ public class Game extends JFrame implements Runnable {
 	 * 	Liste des touches selectionnées
 	 */
 	public void handleCTRL(boolean[] keys) {
-		if(keys[KeyEvent.VK_S])
-			this.world.saveMap();
-		this.world.loadWorld(new File("res/levels/test_world2.txt"));
+		if(this.world.getWorldName().equals("testLevel")) // TODO Provisoire
+			this.world.loadWorld(new File("res/config/levels/testLevel2.txt"));
+		else
+			this.world.loadWorld(new File("res/config/levels/testLevel.txt"));
 	}
 
 	/**
@@ -174,12 +185,14 @@ public class Game extends JFrame implements Runnable {
 	
 	
 	
-	
+	/**
+	 * Charge les assets et les tiles du jeu
+	 */
 	private void loadAssetsAndTiles() {
 		tiles = new Tiles();
 		
 		try {
-			File file = new File("res/tiles/tiles.txt");
+			File file = new File("res/config/tiles/tiles.txt");
 			JSONObject tilesList = new JSONObject(new String(Files.readAllBytes(file.toPath()), "UTF-8"));
 			JSONArray tilesheets = tilesList.getJSONArray("tilesheets");
 			
@@ -220,6 +233,29 @@ public class Game extends JFrame implements Runnable {
 		canvas.createBufferStrategy(3);
 
 		renderer = new RenderHandler(getWidth(), getHeight());
+		
+		addComponentListener(new ComponentListener() {
+			public void componentResized(ComponentEvent e) {
+				int newWidth = canvas.getWidth();
+				int newHeight = canvas.getHeight();
+
+				if(newWidth > renderer.getMaxWidth())
+					newWidth = renderer.getMaxWidth();
+
+				if(newHeight > renderer.getMaxHeight())
+					newHeight = renderer.getMaxHeight();
+
+				renderer.getCamera().w = newWidth;
+				renderer.getCamera().h = newHeight;
+				canvas.setSize(newWidth, newHeight);
+				pack();
+			}
+
+			public void componentHidden(ComponentEvent e) {}
+			public void componentMoved(ComponentEvent e) {}
+			public void componentShown(ComponentEvent e) {}
+		});
+		canvas.requestFocus();
 	}
 	
 	
@@ -262,5 +298,19 @@ public class Game extends JFrame implements Runnable {
 	 */
 	public RenderHandler getRenderer() {
 		return this.renderer;
+	}
+	
+	/**
+	 * @return la classe du monde
+	 */
+	public World getWorld() {
+		return this.world;
+	}
+
+	/**
+	 * @return les tiles
+	 */
+	public Tiles getTiles() {
+		return this.tiles;
 	}
 }

@@ -30,6 +30,8 @@ public abstract class MovingEntity extends Entity {
 	
 	/**
 	 * Entité se déplaçant
+	 * @param name
+	 * 	Nom de l'entité
 	 * @param sprite
 	 * 	Liste des sprites de l'entité (chaque ligne = une animation respective aux valeurs de la constante direction)
 	 * @param framePerAnim
@@ -45,8 +47,8 @@ public abstract class MovingEntity extends Entity {
 	 * @param height
 	 * 	Hauteur de l'entité
 	 */
-	public MovingEntity(AnimatedSprite sprite, int framePerAnim, int initDirection, int xInit, int yInit, int width, int height) {
-		super(sprite, xInit, yInit, width, height);
+	public MovingEntity(String name, AnimatedSprite sprite, int framePerAnim, int initDirection, int xInit, int yInit, int width, int height) {
+		super(name, sprite, xInit, yInit, width, height);
 		
 		this.framePerAnim = framePerAnim;
 		this.direction = initDirection;
@@ -60,25 +62,25 @@ public abstract class MovingEntity extends Entity {
 		boolean didMove = false;
 		int newDir = this.getDirection();
 
-		if(this.getMovingDirection(game) == 0) {
+		if(this.getMovingDirection(game) == 0 && !this.colideWith(game, 0)) {
 			this.entityRectangle.x += this.speed;
 			newDir = 0;
 			didMove = true;
 		}
 		
-		if(this.getMovingDirection(game) == 1) {
+		if(this.getMovingDirection(game) == 1 && !this.colideWith(game, 1)) {
 			this.entityRectangle.x -= this.speed;
 			newDir = 1;
 			didMove = true;
 		}
 		
-		if(this.getMovingDirection(game) == 2) {
+		if(this.getMovingDirection(game) == 2 && !this.colideWith(game, 2)) {
 			this.entityRectangle.y -= this.speed;
 			newDir = 2;
 			didMove = true;
 		}
 		
-		if(this.getMovingDirection(game) == 3) {
+		if(this.getMovingDirection(game) == 3 && !this.colideWith(game, 3)) {
 			this.entityRectangle.y += this.speed;
 			newDir = 3;
 			didMove = true;
@@ -94,6 +96,55 @@ public abstract class MovingEntity extends Entity {
 			this.animatedSprite.reset();
 	}
 	
+	
+	
+	
+	/**
+	 * Check si l'entité collide avec une autre
+	 * @param dir
+	 * 	Direction de l'entité
+	 * @return true s'il y a collision
+	 */
+	private boolean colideWith(Game game, int dir) {
+		return false;
+//		int tileX = this.getWorldPosX(game);
+//		int tileY = this.getWorldPosY(game);
+//		
+//		switch (dir) {
+//			case 0:
+//				tileX += 1;
+//				break;
+//			case 1:
+//				tileX -= 1;
+//				break;
+//			case 2:
+//				tileY -= 1;
+//				break;
+//			case 3:
+//				tileY += 1;
+//				break;
+//		}
+//		
+//		MappedTile tile = game.getWorld().getTileAt(tileX, tileY);
+//		
+//		int tileID = -1;
+//		if(tile == null)
+//			tileID = game.getWorld().getDefaultTileID();
+//		else
+//			tileID = tile.getID();
+//		
+//		if(game.getTiles().getTile(tileID).isSolid())
+//			return true;
+//		else
+//			return false;
+	}
+	
+	
+	
+	
+	
+
+
 	/**
 	 * Direction du joueur (appelée depuis update) :
 	 * 	-1 = IDLE

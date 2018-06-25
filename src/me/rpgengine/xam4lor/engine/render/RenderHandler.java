@@ -1,6 +1,8 @@
 package me.rpgengine.xam4lor.engine.render;
 
 import java.awt.Graphics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
@@ -10,11 +12,22 @@ import me.rpgengine.xam4lor.engine.structure.Rectangle;
 
 /**
  * Rendu de la fenêtre
+ * 
+ * <br><br>Valeurs de zIndex dans les fonctions de rendu :
+ * <br>-       zIndex > 0     en général
+ * <br>-       zIndex = 10    pour les tiles de background
+ * <br>-       zIndex = 15    pour les tiles au dessus du background
+ * <br>- 200 > zIndex > 100   pour toutes les entités
+ * <br>-       zIndex = 210   pour tous les rectangles des entités de debug
+ * <br>-       zIndex = 215   pour toutes les tiles au dessus des entités
+ * <br>-       zIndex = 300   pour tous les graphiques de GUI ou au dessus de tout
  */
 public class RenderHandler {
 	private BufferedImage view;
 	private Rectangle camera;
 	private int[] pixels;
+	private int maxScreenWidth, maxScreenHeight;
+	private int[] pixelsZIndex;
 
 	/**
 	 * Rendu de la fenêtre
@@ -24,14 +37,22 @@ public class RenderHandler {
 	 * 	Hauteur de la fenêtre
 	 */
 	public RenderHandler(int width, int height) {
-		//Create a BufferedImage that will represent our view.
-		view = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		GraphicsDevice[] graphicsDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 
+		for(int i = 0; i < graphicsDevices.length; i++) {
+			if(maxScreenWidth < graphicsDevices[i].getDisplayMode().getWidth())
+				maxScreenWidth = graphicsDevices[i].getDisplayMode().getWidth();
+
+			if(maxScreenHeight < graphicsDevices[i].getDisplayMode().getHeight())
+				maxScreenHeight = graphicsDevices[i].getDisplayMode().getHeight();
+		}
+		
+
+		view   = new BufferedImage(maxScreenWidth, maxScreenHeight, BufferedImage.TYPE_INT_RGB);
 		camera = new Rectangle(0, 0, width, height);
-
-		//Create an array for pixels
-		pixels = ((DataBufferInt) view.getRaster().getDataBuffer()).getData();
-
+		
+		pixels 		 = ((DataBufferInt) view.getRaster().getDataBuffer()).getData();
+		pixelsZIndex = new int[pixels.length];
 	}
 
 	/**
@@ -39,12 +60,10 @@ public class RenderHandler {
 	 * @param graphics
 	 * 	Graphics de rendu de la fenêtre
 	 */
-	public void render(Graphics graphics){
+	public void render(Graphics graphics) {
 		graphics.drawImage(view, 0, 0, view.getWidth(), view.getHeight(), null);
 	}
-	
-	
-	
+
 	/**
 	 * Mise à jour du tableau de pixels par un nouveau tableau de pixels
 	 * @param renderPixels
@@ -61,13 +80,15 @@ public class RenderHandler {
 	 * 	Zoom en X
 	 * @param yZoom
 	 * 	Zoom en Y
+	 * @param zIndex
+	 * 	Index de layer ({@link RenderHandler})
 	 */
-	public void renderArray(int[] renderPixels, int renderWidth, int renderHeight, int xPosition, int yPosition, int xZoom, int yZoom) {
+	public void renderArray(int[] renderPixels, int renderWidth, int renderHeight, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex) {
 		for(int y = 0; y < renderHeight; y++)
 			for(int x = 0; x < renderWidth; x++)
 				for(int yZoomPosition = 0; yZoomPosition < yZoom; yZoomPosition++)
 					for(int xZoomPosition = 0; xZoomPosition < xZoom; xZoomPosition++)
-						setPixel(renderPixels[x + y * renderWidth], (x * xZoom) + xPosition + xZoomPosition, ((y * yZoom) + yPosition + yZoomPosition));
+						setPixel(renderPixels[x + y * renderWidth], (x * xZoom) + xPosition + xZoomPosition, ((y * yZoom) + yPosition + yZoomPosition), zIndex);
 	}
 	
 	
@@ -84,10 +105,12 @@ public class RenderHandler {
 	 * 	Valeur de zoom en x
 	 * @param yZoom
 	 * 	Valeur de zoom en y
+	 * @param zIndex
+	 * 	Index de layer ({@link RenderHandler})
 	 */
-	public void renderImage(BufferedImage image, int xPosition, int yPosition, int xZoom, int yZoom){
+	public void renderImage(BufferedImage image, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex) {
 		int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		renderArray(imagePixels, image.getWidth(), image.getHeight(), xPosition, yPosition, xZoom, yZoom);
+		this.renderArray(imagePixels, image.getWidth(), image.getHeight(), xPosition, yPosition, xZoom, yZoom, zIndex);
 	}
 
 	/**
@@ -102,9 +125,11 @@ public class RenderHandler {
 	 * 	Valeur de zoom en x
 	 * @param yZoom
 	 * 	Valeur de zoom en y
+	 * @param zIndex
+	 * 	Index de layer ({@link RenderHandler})
 	 */
-	public void renderSprite(Sprite sprite, int xPosition, int yPosition, int xZoom, int yZoom) {
-		renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), xPosition, yPosition, xZoom, yZoom);
+	public void renderSprite(Sprite sprite, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex) {
+		this.renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), xPosition, yPosition, xZoom, yZoom, zIndex);
 	}
 
 	/**
@@ -115,11 +140,13 @@ public class RenderHandler {
 	 * 	Zoom en X
 	 * @param yZoom
 	 * 	Zoom en Y
+	 * @param zIndex
+	 * 	Index de layer ({@link RenderHandler})
 	 */
-	public void renderRectangle(Rectangle rectangle, int xZoom, int yZoom){
+	public void renderRectangle(Rectangle rectangle, int xZoom, int yZoom, int zIndex) {
 		int[] rectanglePixels = rectangle.getPixels();
 		if(rectanglePixels != null)
-			renderArray(rectanglePixels, rectangle.w, rectangle.h, rectangle.x, rectangle.y, xZoom, yZoom);	
+			this.renderArray(rectanglePixels, rectangle.w, rectangle.h, rectangle.x, rectangle.y, xZoom, yZoom, zIndex);	
 	}
 
 	/**
@@ -130,31 +157,52 @@ public class RenderHandler {
 	 * 	Position en x
 	 * @param y
 	 * 	Position en y
-	 * @param fixed
-	 * 	false : position relative à la caméra
+	 * @param zIndex
+	 * 	Index de layer ({@link RenderHandler})
 	 */
-	private void setPixel(int pixel, int x, int y) {
-		if(x >= camera.x && y >= camera.y && x <= camera.x + camera.w && y <= camera.y + camera.h)
-		{
-			int pixelIndex = (x - camera.x) + (y - camera.y) * view.getWidth();
-			if(pixels.length > pixelIndex && pixel != Game.alpha)
-				pixels[pixelIndex] = pixel;
+	private void setPixel(int pixel, int x, int y, int zIndex) {
+		if(x >= this.camera.x && y >= this.camera.y && x <= this.camera.x + this.camera.w && y <= this.camera.y + this.camera.h) {
+			int pixelIndex = (x - this.camera.x) + (y - this.camera.y) * this.view.getWidth();
+			if(this.pixels.length > pixelIndex && pixel != Game.alpha && zIndex >= this.pixelsZIndex[pixelIndex]) {
+				this.pixelsZIndex[pixelIndex] = zIndex;
+				this.pixels      [pixelIndex] = pixel;
+			}
 		}
 	}
 
 	/**
+	 * @return la largeur maximum de l'écran
+	 */
+	public int getMaxWidth() {
+		return maxScreenWidth;
+	}
+
+	/**
+	 * @return la hauteur maximum de l'écran
+	 */
+	public int getMaxHeight() {
+		return maxScreenHeight;
+	}
+	
+	/**
 	 * @return la caméra de render
 	 */
 	public Rectangle getCamera() {
-		return camera;
+		return this.camera;
 	}
+	
+	
+	
+	
 
 	/**
 	 * Vide les pixels
 	 */
 	public void clear() {
-		for(int i = 0; i < pixels.length; i++)
-			pixels[i] = 0;
+		for(int i = 0; i < pixels.length; i++) {
+			this.pixels[i] = 0;
+		}
+		
+		this.pixelsZIndex = this.pixels;
 	}
-
 }

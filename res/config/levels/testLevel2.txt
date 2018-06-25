@@ -1,0 +1,53 @@
+{
+    "world_name" : "testLevel2",
+    "fill_tile_ID" : 0,
+    "entities" : {
+        "player" : {
+            "x" : 1,
+            "y" : 1
+        },
+        "npc" : [
+            {
+                "type" : "WalkerNPC",
+                "name" : "round_walker_test1",
+                "x" : 2,
+                "y" : 2,
+                "sprite" : {
+                    "image" : "Player.png",
+                    "sprite_size_x" : 20,
+                    "sprite_size_y" : 26,
+                    "sprite_anim_time" : 5
+                }
+            },
+            {
+                "type" : "WalkerNPC",
+                "name" : "round_walker_test2",
+                "x" : 3,
+                "y" : 2,
+                "sprite" : {
+                    "image" : "Player.png",
+                    "sprite_size_x" : 20,
+                    "sprite_size_y" : 26,
+                    "sprite_anim_time" : 5
+                }
+            }
+        ]
+    },
+    "tiles" : [
+        {
+            "id" : 1,
+            "x" : 0,
+            "y" : 0
+        },
+        {
+            "id" : 1,
+            "x" : 0,
+            "y" : 1
+        },
+        {
+            "id" : 1,
+            "x" : 0,
+            "y" : 2
+        }
+    ]
+}
