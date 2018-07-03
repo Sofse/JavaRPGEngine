@@ -178,8 +178,9 @@ public class Game extends JFrame implements Runnable {
 			render();
 			lastTime = now;
 		}
-
 	}
+	
+	
 
 	
 	
@@ -214,24 +215,13 @@ public class Game extends JFrame implements Runnable {
 	private void createWindow() {
 		this.canvas = new Canvas();
 		
-		//Make our program shutdown when we exit out.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		//Set the position and size of our frame.
 		setBounds(0,0, 1000, 800);
-
-		//Put our frame in the center of the screen.
 		setLocationRelativeTo(null);
-
-		//Add our graphics compoent
 		add(canvas);
-
-		//Make our frame visible.
 		setVisible(true);
 
-		//Create our object for buffer strategy.
 		canvas.createBufferStrategy(3);
-
 		renderer = new RenderHandler(getWidth(), getHeight());
 		
 		addComponentListener(new ComponentListener() {
@@ -255,6 +245,7 @@ public class Game extends JFrame implements Runnable {
 			public void componentMoved(ComponentEvent e) {}
 			public void componentShown(ComponentEvent e) {}
 		});
+		
 		canvas.requestFocus();
 	}
 	

@@ -10,6 +10,7 @@ import me.rpgengine.xam4lor.engine.render.RenderHandler;
 import me.rpgengine.xam4lor.engine.render.sprites.AnimatedSprite;
 import me.rpgengine.xam4lor.engine.render.sprites.SpriteSheet;
 import me.rpgengine.xam4lor.engine.structure.GameObject;
+import me.rpgengine.xam4lor.entities.idleEntities.npc.IdleNPC;
 import me.rpgengine.xam4lor.entities.movingEntities.npc.WalkerNPC;
 import me.rpgengine.xam4lor.entities.movingEntities.player.Player;
 
@@ -64,6 +65,8 @@ public class Entities implements GameObject {
 		// Chargement de l'entité
 		if(entityObject.getString("type").equals("WalkerNPC"))
 			this.entities.add(new WalkerNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y")));
+		else if(entityObject.getString("type").equals("IdleNPC"))
+			this.entities.add(new IdleNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y")));
 	}
 	
 

@@ -1,52 +1,247 @@
 {
-    "tilesheets" : [
-        {
-            "ressource_file_name" : "Tiles1",
-            "extension" : "png",
-            "sprites" : [
-                {
-                    "id" : 0,
-                    "tile_name" : "Grass1",
-                    "x" : 0,
-                    "y" : 1,
-                    "solid" : false
-                },
-                {
-                    "id" : 1,
-                    "tile_name" : "Grass2",
-                    "x" : 0,
-                    "y" : 2,
-                    "solid" : true
-                },
-                {
-                    "id" : 2,
-                    "tile_name" : "Dirt",
-                    "x" : 2,
-                    "y" : 1,
-                    "solid" : false
-                },
-                {
-                    "id" : 3,
-                    "tile_name" : "PathVertical",
-                    "x" : 1,
-                    "y" : 1,
-                    "solid" : false
-                },
-                {
-                    "id" : 4,
-                    "tile_name" : "PathCorner",
-                    "x" : 1,
-                    "y" : 2,
-                    "solid" : false
-                },
-                {
-                    "id" : 5,
-                    "tile_name" : "PathHorizontal",
-                    "x" : 2,
-                    "y" : 2,
-                    "solid" : false
-                }
-            ]
-        }
-    ]
+	"tilesheets" : [
+		{
+			"ressource_file_name" : "Tiles1",
+			"extension" : "png",
+			"sprites" : [
+				{
+					"id" : 0,
+					"tileName" : "Grass1",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 1,
+					"tileName" : "Grass2",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 2,
+					"tileName" : "Dirt",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 3,
+					"tileName" : "PathVertical",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 4,
+					"tileName" : "PathCorner",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 5,
+					"tileName" : "PathHorizontal",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 10
+				}
+			],
+			"last_sprite_id" : 5
+		},
+		{
+			"ressource_file_name" : "pokemon_tiles",
+			"extension" : "png",
+			"sprites" : [
+				{
+					"id" : 6,
+					"tileName" : "-1Texture",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 7,
+					"tileName" : "GroundTexture",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+
+
+
+
+
+				{
+					"id" : 8,
+					"tileName" : "pokemon_center_0_0",
+					"backgroundTileID" : 7,
+					"x" : 0,
+					"y" : 9,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 9,
+					"tileName" : "pokemon_center_0_1",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 10,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 10,
+					"tileName" : "pokemon_center_0_2",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 11,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 11,
+					"tileName" : "pokemon_center_0_3",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 12,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+				{
+					"id" : 12,
+					"tileName" : "pokemon_center_1_0",
+					"backgroundTileID" : 7,
+					"x" : 1,
+					"y" : 9,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 13,
+					"tileName" : "pokemon_center_1_1",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 10,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 14,
+					"tileName" : "pokemon_center_1_2",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 11,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 15,
+					"tileName" : "pokemon_center_1_3",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 12,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+				{
+					"id" : 16,
+					"tileName" : "pokemon_center_2_0",
+					"backgroundTileID" : 7,
+					"x" : 2,
+					"y" : 9,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 17,
+					"tileName" : "pokemon_center_2_1",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 10,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 18,
+					"tileName" : "pokemon_center_2_2",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 11,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 19,
+					"tileName" : "pokemon_center_2_3",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 12,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+				{
+					"id" : 20,
+					"tileName" : "pokemon_center_3_0",
+					"backgroundTileID" : 7,
+					"x" : 3,
+					"y" : 9,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 21,
+					"tileName" : "pokemon_center_3_1",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 10,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 22,
+					"tileName" : "pokemon_center_3_2",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 11,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 23,
+					"tileName" : "pokemon_center_3_3",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 12,
+					"solid" : false,
+					"zIndex" : 10
+				}
+			],
+			"last_sprite_id" : 23
+		}
+	]
 }

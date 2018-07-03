@@ -40,10 +40,10 @@ public class Tiles {
 		for (int i = 0; i < sprites.length(); i++) {
 			JSONObject tile = sprites.getJSONObject(i);
 			int id = tile.getInt("id");
-			String tileName = tile.getString("tile_name");
+			String tileName = tile.getString("tileName");
 			
 			if(!this.tilesList.containsKey(id))
-				this.tilesList.put(id, new Tile(tileName, spriteSheet.getSprite(tile.getInt("x"), tile.getInt("y")), tile.getBoolean("solid")));
+				this.tilesList.put(id, new Tile(tileName, spriteSheet.getSprite(tile.getInt("x"), tile.getInt("y")), tile.getBoolean("solid"), tile.getInt("zIndex"), tile.getInt("backgroundTileID")));
 			else
 				System.out.println("La tile à l'ID " + id + " du nom de '" + tileName + "' a le même ID qu'une autre Tile.");
 		}
@@ -71,7 +71,7 @@ public class Tiles {
 	 */
 	public void renderTile(int tileID, RenderHandler renderer, int xPosition, int yPosition, int xZoom, int yZoom) {
 		if(tileID >= 0 && tilesList.size() > tileID)
-			renderer.renderSprite(tilesList.get(tileID).sprite, xPosition, yPosition, xZoom, yZoom, 10);
+			tilesList.get(tileID).renderSprite(renderer, xPosition, yPosition, xZoom, yZoom);
 		else
 			System.out.println("TileID " + tileID + " is not within range " + tilesList.size() + ".");
 	}
@@ -111,6 +111,8 @@ public class Tiles {
 	}
 	
 	
+	
+	
 	/**
 	 * Tile
 	 */
@@ -118,6 +120,8 @@ public class Tiles {
 		private String tileName;
 		private Sprite sprite;
 		private boolean solid;
+		private int zIndex;
+		private int backgroundTileID;
 		
 		/**
 		 * Tile
@@ -127,14 +131,42 @@ public class Tiles {
 		 * 	Sprite de la tile
 		 * @param solid
 		 * 	true : la tile est solide
+		 * @param zIndex
+		 * 	Valeur de zIndex de la Tile
+		 * @param backgroundTileID
+		 * 	ID de la Tile de background (-1 si pas de Tile)
 		 */
-		public Tile(String tileName, Sprite sprite, boolean solid) {
+		public Tile(String tileName, Sprite sprite, boolean solid, int zIndex, int backgroundTileID) {
 			this.tileName = tileName;
 			this.sprite = sprite;
 			this.solid = solid;
+			this.zIndex = zIndex;
+			this.backgroundTileID = backgroundTileID;
 		}
 		
 		
+		
+		/**
+		 * @param renderer
+		 * 	Renderer de la Tile
+		 * @param xPosition
+		 * 	Position en X
+		 * @param yPosition
+		 * 	Position en Y
+		 * @param xZoom
+		 * 	Zoom en X
+		 * @param yZoom
+		 * 	Zoom en Y
+		 */
+		public void renderSprite(RenderHandler renderer, int xPosition, int yPosition, int xZoom, int yZoom) {
+			if(this.backgroundTileID != -1)
+				tilesList.get(this.backgroundTileID).renderSprite(renderer, xPosition, yPosition, xZoom, yZoom);
+			
+			renderer.renderSprite(this.sprite, xPosition, yPosition, xZoom, yZoom, this.zIndex);
+		}
+
+
+
 		
 		/**
 		 * @return le nom de la Tile

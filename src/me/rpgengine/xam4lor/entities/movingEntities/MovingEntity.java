@@ -3,6 +3,8 @@ package me.rpgengine.xam4lor.entities.movingEntities;
 import me.rpgengine.xam4lor.engine.Game;
 import me.rpgengine.xam4lor.engine.render.sprites.AnimatedSprite;
 import me.rpgengine.xam4lor.entities.Entity;
+import me.rpgengine.xam4lor.world.Tiles;
+import me.rpgengine.xam4lor.world.World.MappedTile;
 
 /**
  * Entité se déplaçant
@@ -52,6 +54,7 @@ public abstract class MovingEntity extends Entity {
 		
 		this.framePerAnim = framePerAnim;
 		this.direction = initDirection;
+		this.updateDirection();
 		
 		this.speed = 10;
 	}
@@ -100,43 +103,147 @@ public abstract class MovingEntity extends Entity {
 	
 	
 	/**
-	 * Check si l'entité collide avec une autre
+	 * Check si l'entité collide avec une tile
 	 * @param dir
 	 * 	Direction de l'entité
 	 * @return true s'il y a collision
 	 */
 	private boolean colideWith(Game game, int dir) {
+		float posFloatX = this.getWorldPosRelativeX(game);
+		float posFloatY = this.getWorldPosRelativeY(game);
+		float sizeX = (float) this.entityRectangle.w / Tiles.TILE_SIZE / 2.0f;
+		float sizeY = (float) this.entityRectangle.h / Tiles.TILE_SIZE / 2.0f;
+		
+		switch (dir) {
+			case 0:
+				if(
+					this.isTileSolid(
+						game,
+						posFloatX + sizeX,
+						posFloatY + sizeY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX + sizeX,
+						posFloatY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX + sizeX,
+						posFloatY - sizeY
+					)
+				) {
+					return true;
+				}
+				
+				return false;
+				
+			case 1:
+				if(
+					this.isTileSolid(
+						game,
+						posFloatX - sizeX,
+						posFloatY + sizeY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX - sizeX,
+						posFloatY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX - sizeX,
+						posFloatY - sizeY
+					)
+				) {
+					return true;
+				}
+				
+				return false;
+					
+					
+			case 2:
+				if(
+					this.isTileSolid(
+						game,
+						posFloatX + sizeX,
+						posFloatY - sizeY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX,
+						posFloatY - sizeY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX - sizeX,
+						posFloatY - sizeY
+					)
+				) {
+					return true;
+				}
+					
+				return false;
+					
+			case 3:
+				if(
+					this.isTileSolid(
+						game,
+						posFloatX + sizeX,
+						posFloatY + sizeY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX,
+						posFloatY + sizeY
+					)
+					||
+					this.isTileSolid(
+						game,
+						posFloatX - sizeX,
+						posFloatY + sizeY
+					)
+				) {
+					return true;
+				}
+					
+				return false;
+		}
+		
 		return false;
-//		int tileX = this.getWorldPosX(game);
-//		int tileY = this.getWorldPosY(game);
-//		
-//		switch (dir) {
-//			case 0:
-//				tileX += 1;
-//				break;
-//			case 1:
-//				tileX -= 1;
-//				break;
-//			case 2:
-//				tileY -= 1;
-//				break;
-//			case 3:
-//				tileY += 1;
-//				break;
-//		}
-//		
-//		MappedTile tile = game.getWorld().getTileAt(tileX, tileY);
-//		
-//		int tileID = -1;
-//		if(tile == null)
-//			tileID = game.getWorld().getDefaultTileID();
-//		else
-//			tileID = tile.getID();
-//		
-//		if(game.getTiles().getTile(tileID).isSolid())
-//			return true;
-//		else
-//			return false;
+	}
+	
+	
+	/**
+	 * Attention : tronque la position en X et Y
+	 * @param game
+	 * 	Instance du jeu
+	 * @param posFloatX
+	 * 	Position en X
+	 * @param posFloatY
+	 * 	Position en Y
+	 * @return true si la tile est solide
+	 */
+	private boolean isTileSolid(Game game, float posFloatX, float posFloatY) {
+		MappedTile tile = game.getWorld().getTileAt((int) posFloatX, (int) posFloatY);
+		
+		int tileID = -1;
+		if(tile == null)
+			tileID = game.getWorld().getDefaultTileID();
+		else
+			tileID = tile.getID();
+		
+		if(game.getTiles().getTile(tileID).isSolid())
+			return true;
+		else
+			return false;
 	}
 	
 	

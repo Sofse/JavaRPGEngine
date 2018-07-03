@@ -76,6 +76,9 @@ public abstract class Entity implements GameObject {
 			renderer.renderSprite(this.animatedSprite, this.entityRectangle.x, this.entityRectangle.y, xZoom, yZoom, 7500 + this.entityRectangle.y / Tiles.TILE_SIZE / yZoom);
 	}
 	
+	@Override
+	public void update(Game game) {}
+	
 	
 	/**
 	 * Modification de la position de l'entité
@@ -104,11 +107,11 @@ public abstract class Entity implements GameObject {
 	/**
 	 * @param game
 	 * 	Instance de jeu
-	 * @return la tile en X de l'entité
+	 * @return la position centrale en X de l'entité
 	 */
-	public int getWorldPosX(Game game) {
+	public float getWorldPosRelativeX(Game game) {
 		float realX = (float) this.entityRectangle.x / Tiles.TILE_SIZE / game.xZoom;
-		int tileX = (int) (realX + (float) this.entityRectangle.w / Tiles.TILE_SIZE / 2.0f);
+		float tileX = (float) (realX + (float) this.entityRectangle.w / Tiles.TILE_SIZE / 2.0f);
 		
 		if(realX * 2 < -1) {
 			tileX -= 1;
@@ -120,11 +123,11 @@ public abstract class Entity implements GameObject {
 	/**
 	 * @param game
 	 * 	Instance de jeu
-	 * @return la tile en X de l'entité
+	 * @return la position centrale en Y de l'entité
 	 */
-	public int getWorldPosY(Game game) {
+	public float getWorldPosRelativeY(Game game) {
 		float realY = (float) this.entityRectangle.y / Tiles.TILE_SIZE / game.yZoom;
-		int tileY = (int) (realY + (float) this.entityRectangle.h / Tiles.TILE_SIZE / 2.0f);
+		float tileY = (float) (realY + (float) this.entityRectangle.h / Tiles.TILE_SIZE / 2.0f);
 		
 		if(realY * 2 < -1) {
 			tileY -= 1;
