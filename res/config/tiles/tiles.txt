@@ -1,4 +1,5 @@
 {
+	"last_sprite_id" : 85,
 	"tilesheets" : [
 		{
 			"ressource_file_name" : "Tiles1",
@@ -67,7 +68,7 @@
 			"sprites" : [
 				{
 					"id" : 6,
-					"tileName" : "-1Texture",
+					"tileName" : "NullTexture",
 					"backgroundTileID" : -1,
 					"x" : 0,
 					"y" : 0,
@@ -96,7 +97,7 @@
 					"backgroundTileID" : 7,
 					"x" : 0,
 					"y" : 9,
-					"solid" : false,
+					"solid" : true,
 					"zIndex" : 50015
 				},
 				{
@@ -134,7 +135,7 @@
 					"backgroundTileID" : 7,
 					"x" : 1,
 					"y" : 9,
-					"solid" : false,
+					"solid" : true,
 					"zIndex" : 50015
 				},
 				{
@@ -172,7 +173,7 @@
 					"backgroundTileID" : 7,
 					"x" : 2,
 					"y" : 9,
-					"solid" : false,
+					"solid" : true,
 					"zIndex" : 50015
 				},
 				{
@@ -210,7 +211,7 @@
 					"backgroundTileID" : 7,
 					"x" : 3,
 					"y" : 9,
-					"solid" : false,
+					"solid" : true,
 					"zIndex" : 50015
 				},
 				{
@@ -242,6 +243,628 @@
 				}
 			],
 			"last_sprite_id" : 23
+		},
+		{
+			"ressource_file_name" : "GUI",
+			"extension" : "png",
+			"sprites" : [
+				{
+					"id" : 24,
+					"tileName" : "arrow_up",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 25,
+					"tileName" : "arrow_right",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 26,
+					"tileName" : "arrow_down",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+
+
+
+				{
+					"id" : 27,
+					"tileName" : "dialog_0_0",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 28,
+					"tileName" : "dialog_0_1",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 29,
+					"tileName" : "dialog_0_2",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+
+				{
+					"id" : 30,
+					"tileName" : "dialog_1_0",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 31,
+					"tileName" : "dialog_1_1",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 32,
+					"tileName" : "dialog_1_2",
+					"backgroundTileID" : -1,
+					"x" : 2,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+
+				{
+					"id" : 33,
+					"tileName" : "dialog_2_0",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 34,
+					"tileName" : "dialog_2_1",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 60100
+				},
+				{
+					"id" : 35,
+					"tileName" : "dialog_2_2",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 60100
+				}
+			],
+			"last_sprite_id" : 35
+		},
+		{
+			"ressource_file_name" : "inside_pkm",
+			"extension" : "png",
+			"sprites" : [
+				{
+					"id" : 36,
+					"tileName" : "plank_black",
+					"backgroundTileID" : -1,
+					"x" : 0,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 37,
+					"tileName" : "plank",
+					"backgroundTileID" : -1,
+					"x" : 1,
+					"y" : 0,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 38,
+					"tileName" : "tapis_0_0",
+					"backgroundTileID" : 37,
+					"x" : 0,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 39,
+					"tileName" : "tapis_0_1",
+					"backgroundTileID" : 37,
+					"x" : 0,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 40,
+					"tileName" : "tapis_0_2",
+					"backgroundTileID" : 37,
+					"x" : 0,
+					"y" : 3,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				
+				{
+					"id" : 41,
+					"tileName" : "tapis_1_0",
+					"backgroundTileID" : 37,
+					"x" : 1,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 42,
+					"tileName" : "tapis_1_1",
+					"backgroundTileID" : 37,
+					"x" : 1,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 43,
+					"tileName" : "tapis_1_2",
+					"backgroundTileID" : 37,
+					"x" : 1,
+					"y" : 3,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 44,
+					"tileName" : "tapis_2_0",
+					"backgroundTileID" : 37,
+					"x" : 2,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 45,
+					"tileName" : "tapis_2_1",
+					"backgroundTileID" : 37,
+					"x" : 2,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 46,
+					"tileName" : "tapis_2_2",
+					"backgroundTileID" : 37,
+					"x" : 2,
+					"y" : 3,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 47,
+					"tileName" : "computer_table_0_0",
+					"backgroundTileID" : 66,
+					"x" : 0,
+					"y" : 4,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 48,
+					"tileName" : "computer_table_0_1",
+					"backgroundTileID" : 36,
+					"x" : 0,
+					"y" : 5,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 49,
+					"tileName" : "computer_table_1_0",
+					"backgroundTileID" : 66,
+					"x" : 1,
+					"y" : 4,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 50,
+					"tileName" : "computer_table_1_1",
+					"backgroundTileID" : 36,
+					"x" : 1,
+					"y" : 5,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 51,
+					"tileName" : "plant_0_0",
+					"backgroundTileID" : 36,
+					"x" : 2,
+					"y" : 4,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 52,
+					"tileName" : "plant_0_1",
+					"backgroundTileID" : 36,
+					"x" : 2,
+					"y" : 5,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 53,
+					"tileName" : "television_0_0",
+					"backgroundTileID" : 66,
+					"x" : 3,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 54,
+					"tileName" : "television_0_1",
+					"backgroundTileID" : 36,
+					"x" : 3,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 55,
+					"tileName" : "television_1_0",
+					"backgroundTileID" : 66,
+					"x" : 4,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 56,
+					"tileName" : "television_1_1",
+					"backgroundTileID" : 36,
+					"x" : 4,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 57,
+					"tileName" : "wii",
+					"backgroundTileID" : 36,
+					"x" : 5,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 58,
+					"tileName" : "chair_0",
+					"backgroundTileID" : 37,
+					"x" : 5,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 59,
+					"tileName" : "bed_0_0",
+					"backgroundTileID" : 37,
+					"x" : 3,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 60,
+					"tileName" : "bed_0_1",
+					"backgroundTileID" : 37,
+					"x" : 3,
+					"y" : 3,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 61,
+					"tileName" : "bed_0_2",
+					"backgroundTileID" : 37,
+					"x" : 3,
+					"y" : 4,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 62,
+					"tileName" : "bed_1_0",
+					"backgroundTileID" : 37,
+					"x" : 4,
+					"y" : 2,
+					"solid" : false,
+					"zIndex" : 50015
+				},
+				{
+					"id" : 63,
+					"tileName" : "bed_1_1",
+					"backgroundTileID" : 37,
+					"x" : 4,
+					"y" : 3,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 64,
+					"tileName" : "bed_1_2",
+					"backgroundTileID" : 37,
+					"x" : 4,
+					"y" : 4,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 65,
+					"tileName" : "toit_0_1",
+					"backgroundTileID" : -1,
+					"x" : 6,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 66,
+					"tileName" : "toit_0_2",
+					"backgroundTileID" : -1,
+					"x" : 6,
+					"y" : 2,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 67,
+					"tileName" : "toit_1_1",
+					"backgroundTileID" : -1,
+					"x" : 7,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 68,
+					"tileName" : "toit_2_0",
+					"backgroundTileID" : -1,
+					"x" : 8,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 69,
+					"tileName" : "toit_2_1",
+					"backgroundTileID" : -1,
+					"x" : 8,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 70,
+					"tileName" : "toit_3_0",
+					"backgroundTileID" : -1,
+					"x" : 9,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 71,
+					"tileName" : "toit_4_0",
+					"backgroundTileID" : -1,
+					"x" : 10,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 72,
+					"tileName" : "toit_5_0",
+					"backgroundTileID" : -1,
+					"x" : 11,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 73,
+					"tileName" : "toit_6_0",
+					"backgroundTileID" : -1,
+					"x" : 12,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 74,
+					"tileName" : "toit_7_0",
+					"backgroundTileID" : -1,
+					"x" : 13,
+					"y" : 0,
+					"solid" : true,
+					"zIndex" : 10
+				},
+				{
+					"id" : 75,
+					"tileName" : "toit_7_1",
+					"backgroundTileID" : -1,
+					"x" : 13,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 76,
+					"tileName" : "toit_8_1",
+					"backgroundTileID" : -1,
+					"x" : 14,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 77,
+					"tileName" : "toit_9_1",
+					"backgroundTileID" : -1,
+					"x" : 15,
+					"y" : 1,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 78,
+					"tileName" : "toit_3_1",
+					"backgroundTileID" : -1,
+					"x" : 9,
+					"y" : 1,
+					"solid" : false,
+					"zIndex" : 10
+				},
+
+
+
+				{
+					"id" : 79,
+					"tileName" : "black",
+					"backgroundTileID" : -1,
+					"x" : 3,
+					"y" : 5,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+
+
+
+				{
+					"id" : 80,
+					"tileName" : "stairs_0_0_0",
+					"backgroundTileID" : 66,
+					"x" : 5,
+					"y" : 3,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 81,
+					"tileName" : "stairs_0_0_1",
+					"backgroundTileID" : 36,
+					"x" : 5,
+					"y" : 4,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 82,
+					"tileName" : "stairs_0_0_2",
+					"backgroundTileID" : 37,
+					"x" : 5,
+					"y" : 5,
+					"solid" : true,
+					"zIndex" : 10
+				},
+
+				{
+					"id" : 83,
+					"tileName" : "stairs_0_1_0",
+					"backgroundTileID" : 66,
+					"x" : 6,
+					"y" : 3,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 84,
+					"tileName" : "stairs_0_1_1",
+					"backgroundTileID" : -1,
+					"x" : 6,
+					"y" : 4,
+					"solid" : false,
+					"zIndex" : 10
+				},
+				{
+					"id" : 85,
+					"tileName" : "stairs_0_1_2",
+					"backgroundTileID" : 37,
+					"x" : 6,
+					"y" : 5,
+					"solid" : true,
+					"zIndex" : 10
+				}
+			],
+			"last_sprite_id" : 85
 		}
 	]
 }

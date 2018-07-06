@@ -1,6 +1,8 @@
 package me.rpgengine.xam4lor.engine;
 
 import java.awt.Canvas;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -51,9 +53,9 @@ public class Game extends JFrame implements Runnable {
 	
 	private Canvas canvas;
 	private RenderHandler renderer;
+	private Font mainFont;
 
 	
-
 	private Tiles tiles;
 	private World world;
 
@@ -92,8 +94,9 @@ public class Game extends JFrame implements Runnable {
 		super.paint(graphics);
 
 		this.world.render(renderer, xZoom, yZoom);
-
 		renderer.render(graphics);
+		
+		this.world.postRender(graphics, xZoom, yZoom);
 
 		graphics.dispose();
 		bufferStrategy.show();
@@ -106,6 +109,8 @@ public class Game extends JFrame implements Runnable {
 	public void update() {
 		this.world.update(this);
 	}
+	
+	
 
 	
 	
@@ -119,9 +124,9 @@ public class Game extends JFrame implements Runnable {
 	 */
 	public void handleCTRL(boolean[] keys) {
 		if(this.world.getWorldName().equals("testLevel")) // TODO Provisoire
-			this.world.loadWorld(new File("res/config/levels/testLevel2.txt"));
+			this.world.loadWorld("testLevel2.txt");
 		else
-			this.world.loadWorld(new File("res/config/levels/testLevel.txt"));
+			this.world.loadWorld("testLevel.txt");
 	}
 
 	/**
@@ -132,9 +137,7 @@ public class Game extends JFrame implements Runnable {
 	 * 	Position en Y absolue
 	 */
 	public void leftClick(int x, int y) {
-		x = (int) Math.floor((x + renderer.getCamera().x)/(Double.parseDouble(Tiles.TILE_SIZE + "") * xZoom));
-		y = (int) Math.floor((y + renderer.getCamera().y)/(Double.parseDouble(Tiles.TILE_SIZE + "") * yZoom));
-		this.world.setTile(x, y, 2);
+		// TODO : this.getWorld().getGUIContainer().showGUI(0, true);
 	}
 
 	/**
@@ -144,11 +147,7 @@ public class Game extends JFrame implements Runnable {
 	 * @param y
 	 * 	Position en Y absolue
 	 */
-	public void rightClick(int x, int y) {
-		x = (int) Math.floor((x + renderer.getCamera().x)/(Double.parseDouble(Tiles.TILE_SIZE + "") * xZoom));
-		y = (int) Math.floor((y + renderer.getCamera().y)/(Double.parseDouble(Tiles.TILE_SIZE + "") * yZoom));
-		this.world.removeTile(x, y);
-	}
+	public void rightClick(int x, int y) {}
 	
 	
 	
@@ -190,6 +189,7 @@ public class Game extends JFrame implements Runnable {
 	 * Charge les assets et les tiles du jeu
 	 */
 	private void loadAssetsAndTiles() {
+		// tiles + sprites
 		tiles = new Tiles();
 		
 		try {
@@ -207,6 +207,14 @@ public class Game extends JFrame implements Runnable {
 			}
 		}
 		catch (JSONException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		// fonts
+	    try {
+			this.mainFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/font/PokemonFont.ttf")).deriveFont(Font.PLAIN, 19);
+	    }
+	    catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -303,5 +311,12 @@ public class Game extends JFrame implements Runnable {
 	 */
 	public Tiles getTiles() {
 		return this.tiles;
+	}
+	
+	/**
+	 * @return le font par défault
+	 */
+	public Font getMainFont() {
+		return mainFont;
 	}
 }

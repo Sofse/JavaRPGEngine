@@ -86,13 +86,15 @@ public class RenderHandler {
 	 * 	Zoom en Y
 	 * @param zIndex
 	 * 	Index de layer ({@link RenderHandler})
+	 * @param fixed
+	 * 	True : position fixée sur l'écran
 	 */
-	public void renderArray(int[] renderPixels, int renderWidth, int renderHeight, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex) {
+	public void renderArray(int[] renderPixels, int renderWidth, int renderHeight, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex, boolean fixed) {
 		for(int y = 0; y < renderHeight; y++)
 			for(int x = 0; x < renderWidth; x++)
 				for(int yZoomPosition = 0; yZoomPosition < yZoom; yZoomPosition++)
 					for(int xZoomPosition = 0; xZoomPosition < xZoom; xZoomPosition++)
-						setPixel(renderPixels[x + y * renderWidth], (x * xZoom) + xPosition + xZoomPosition, ((y * yZoom) + yPosition + yZoomPosition), zIndex);
+						setPixel(renderPixels[x + y * renderWidth], (x * xZoom) + xPosition + xZoomPosition, ((y * yZoom) + yPosition + yZoomPosition), zIndex, fixed);
 	}
 	
 	
@@ -111,10 +113,12 @@ public class RenderHandler {
 	 * 	Valeur de zoom en y
 	 * @param zIndex
 	 * 	Index de layer ({@link RenderHandler})
+	 * @param fixed
+	 * 	True : position fixée sur l'écran
 	 */
-	public void renderImage(BufferedImage image, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex) {
+	public void renderImage(BufferedImage image, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex, boolean fixed) {
 		int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		this.renderArray(imagePixels, image.getWidth(), image.getHeight(), xPosition, yPosition, xZoom, yZoom, zIndex);
+		this.renderArray(imagePixels, image.getWidth(), image.getHeight(), xPosition, yPosition, xZoom, yZoom, zIndex, fixed);
 	}
 
 	/**
@@ -131,9 +135,11 @@ public class RenderHandler {
 	 * 	Valeur de zoom en y
 	 * @param zIndex
 	 * 	Index de layer ({@link RenderHandler})
+	 * @param fixed
+	 * 	True : position fixée sur l'écran
 	 */
-	public void renderSprite(Sprite sprite, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex) {
-		this.renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), xPosition, yPosition, xZoom, yZoom, zIndex);
+	public void renderSprite(Sprite sprite, int xPosition, int yPosition, int xZoom, int yZoom, int zIndex, boolean fixed) {
+		this.renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), xPosition, yPosition, xZoom, yZoom, zIndex, fixed);
 	}
 
 	/**
@@ -146,11 +152,13 @@ public class RenderHandler {
 	 * 	Zoom en Y
 	 * @param zIndex
 	 * 	Index de layer ({@link RenderHandler})
+	 * @param fixed
+	 * 	True : position fixée sur l'écran
 	 */
-	public void renderRectangle(Rectangle rectangle, int xZoom, int yZoom, int zIndex) {
+	public void renderRectangle(Rectangle rectangle, int xZoom, int yZoom, int zIndex, boolean fixed) {
 		int[] rectanglePixels = rectangle.getPixels();
 		if(rectanglePixels != null)
-			this.renderArray(rectanglePixels, rectangle.w, rectangle.h, rectangle.x, rectangle.y, xZoom, yZoom, zIndex);	
+			this.renderArray(rectanglePixels, rectangle.w, rectangle.h, rectangle.x, rectangle.y, xZoom, yZoom, zIndex, fixed);	
 	}
 
 	/**
@@ -163,14 +171,22 @@ public class RenderHandler {
 	 * 	Position en y
 	 * @param zIndex
 	 * 	Index de layer ({@link RenderHandler})
+	 * @param fixed
+	 * 	True : position fixée sur l'écran
 	 */
-	private void setPixel(int pixel, int x, int y, int zIndex) {
-		if(x >= this.camera.x && y >= this.camera.y && x <= this.camera.x + this.camera.w && y <= this.camera.y + this.camera.h) {
-			int pixelIndex = (x - this.camera.x) + (y - this.camera.y) * this.view.getWidth();
-			if(this.pixels.length > pixelIndex && pixel != Game.alpha && zIndex >= this.pixelsZIndex[pixelIndex]) {
-				this.pixelsZIndex[pixelIndex] = zIndex;
-				this.pixels      [pixelIndex] = pixel;
-			}
+	public void setPixel(int pixel, int x, int y, int zIndex, boolean fixed) {
+		int pixelIndex = -1;
+		
+		if(!fixed && x >= this.camera.x && y >= this.camera.y && x <= this.camera.x + this.camera.w && y <= this.camera.y + this.camera.h) {
+			pixelIndex = (x - this.camera.x) + (y - this.camera.y) * this.view.getWidth();
+		}
+		else if(fixed && x >= 0 && y >= 0 && x <= camera.w && y <= camera.h) {
+			pixelIndex = x + y * view.getWidth();
+		}
+		
+		if(pixelIndex != -1 && this.pixels.length > pixelIndex && pixel != Game.alpha && zIndex >= this.pixelsZIndex[pixelIndex]) {
+			this.pixelsZIndex[pixelIndex] = zIndex;
+			this.pixels      [pixelIndex] = pixel;
 		}
 	}
 

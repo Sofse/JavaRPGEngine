@@ -1,5 +1,6 @@
 package me.rpgengine.xam4lor.engine.render.sprites;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import me.rpgengine.xam4lor.engine.Game;
@@ -80,10 +81,7 @@ public class AnimatedSprite extends Sprite implements GameObject {
 		}
 	}
 
-	@Override
-	public void render(RenderHandler renderer, int xZoom, int yZoom) {
-		//Fait dans la classe des layers
-	}
+	
 
 	@Override
 	public void update(Game game) {
@@ -94,6 +92,12 @@ public class AnimatedSprite extends Sprite implements GameObject {
 			this.incrementSprite();
 		}
 	}
+	
+	@Override
+	public void render(RenderHandler renderer, int xZoom, int yZoom) {}
+	
+	@Override
+	public void postRender(Graphics graphics, int xZoom, int yZoom) {}
 	
 	
 	

@@ -1,5 +1,6 @@
 package me.rpgengine.xam4lor.world;
 
+import java.awt.Graphics;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,9 +12,11 @@ import org.json.JSONObject;
 
 import me.rpgengine.xam4lor.engine.Game;
 import me.rpgengine.xam4lor.engine.render.RenderHandler;
+import me.rpgengine.xam4lor.engine.render.gui.GUIContainer;
 import me.rpgengine.xam4lor.engine.structure.GameObject;
 import me.rpgengine.xam4lor.engine.structure.Rectangle;
 import me.rpgengine.xam4lor.entities.Entities;
+import me.rpgengine.xam4lor.world.Tiles.Tile;
 
 /**
  * Création d'un monde
@@ -25,6 +28,9 @@ public class World implements GameObject {
 
 	private ArrayList<MappedTile> mappedTiles;
 	private Entities entities;
+	private GUIContainer gui;
+	
+	private boolean worldUpdating;
 
 	/**
 	 * Création d'un monde
@@ -37,15 +43,22 @@ public class World implements GameObject {
 	public World(Game game, File mapFile, Tiles tileSet) {
 		this.tileSet = tileSet;
 		this.entities = new Entities(game);
+		this.gui = new GUIContainer(game, tileSet);
 		
 		this.loadWorld(mapFile);
+		
+		this.worldUpdating = true;
 	}
 
 	
 	
 	@Override
 	public void update(Game game) {
-		this.entities.update(game);
+		if(this.worldUpdating) {
+			this.entities.update(game);
+		}
+		
+		this.gui.update(game);
 	}
 	
 	@Override
@@ -53,6 +66,13 @@ public class World implements GameObject {
 		this.renderWorld(renderer, xZoom, yZoom);
 		
 		this.entities.render(renderer, xZoom, yZoom);
+		this.gui.render(renderer, xZoom, yZoom);
+	}
+	
+	@Override
+	public void postRender(Graphics graphics, int xZoom, int yZoom) {
+		this.entities.postRender(graphics, xZoom, yZoom);
+		this.gui.postRender(graphics, xZoom, yZoom);
 	}
 	
 	
@@ -78,12 +98,14 @@ public class World implements GameObject {
 			// Ajout des tiles
 			for (int i = 0; i < tiles.length(); i++) {
 				JSONObject tile = tiles.getJSONObject(i);
-				mappedTiles.add(new MappedTile(tile.getInt("id"), tile.getInt("x"), tile.getInt("y")));
+				mappedTiles.add(new MappedTile(tile.getInt("id"), tile.getInt("x"), tile.getInt("y"), tile.has("options") ? tile.getJSONObject("options") : null));
 			}
 			
 			// Ajout des entités
 			this.entities.clearEntities();
-			this.entities.addPlayer(entities.getJSONObject("player").getInt("x"), entities.getJSONObject("player").getInt("y"));
+			
+			JSONObject player = entities.getJSONObject("player");
+			this.entities.addPlayer(player.getInt("x"), player.getInt("y"), player.getInt("speed"));
 			
 			for (int i = 0; i < npc.length(); i++)
 				this.entities.addEntity(npc.getJSONObject(i));
@@ -91,6 +113,15 @@ public class World implements GameObject {
 		catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Chargement du monde
+	 * @param worldName
+	 * 	Nom du monde
+	 */
+	public void loadWorld(String worldName) {
+		this.loadWorld(new File("res/config/levels/" + worldName + ".txt"));
 	}
 	
 	
@@ -150,7 +181,7 @@ public class World implements GameObject {
 		catch(IndexOutOfBoundsException e) {}
 
 		if(!foundTile)
-			mappedTiles.add(new MappedTile(tileID, tileX, tileY));
+			mappedTiles.add(new MappedTile(tileID, tileX, tileY, null));
 	}
 	
 	/**
@@ -192,31 +223,51 @@ public class World implements GameObject {
 	
 
 	/**
-	 * Tile ID dans le tileSet ainsi que les positions de la tile sur la carte
+	 * MappedTile
 	 */
 	public class MappedTile {
 		private int id, x, y;
+		private JSONObject options;
 		
 		/**
-		 * Tile ID dans le tileSet ainsi que les positions de la tile sur la carte
+		 * MappedTile
 		 * @param id
 		 * 	ID de la tile
 		 * @param x 
-		 * 	Position en X de la tile
+		 * 	Position en X de la mappedTile
 		 * @param y 
-		 * 	Position en Y de la tile
+		 * 	Position en Y de la mappedTile
+		 * @param options
+		 * 	Configuration de la mappedTile : null pour sans configuration particulière
 		 */
-		public MappedTile(int id, int x, int y) {
+		public MappedTile(int id, int x, int y, JSONObject options) {
 			this.id = id;
 			this.x = x;
 			this.y = y;
+			this.options = options;
 		}
 
 		/**
-		 * @return l'ID de la tile actuelle
+		 * @return l'ID de la mappedTile actuelle
 		 */
 		public int getID() {
 			return this.id;
+		}
+		
+		/**
+		 * @return la configuration de la mappedTile
+		 */
+		public JSONObject getOptions() {
+			return this.options;
+		}
+		
+		/**
+		 * @param game
+		 * 	Instance du jeu
+		 * @return la tile du jeu
+		 */
+		public Tile getTile(Game game) {
+			return game.getTiles().getTile(this.id);
 		}
 	}
 	
@@ -235,5 +286,34 @@ public class World implements GameObject {
 	 */
 	public String getWorldName() {
 		return this.levelName;
+	}
+	
+	/**
+	 * @return le GUI container
+	 */
+	public GUIContainer getGUIContainer() {
+		return gui;
+	}
+	
+	/**
+	 * @param worldUpdating
+	 * 	true : le world s'update
+	 */
+	public void setWorldUpdating(boolean worldUpdating) {
+		this.worldUpdating = worldUpdating;
+	}
+	
+	/**
+	 * @return true si le world s'update
+	 */
+	public boolean isWorldUpdating() {
+		return worldUpdating;
+	}
+	
+	/**
+	 * @return la liste des entités
+	 */
+	public Entities getEntities() {
+		return entities;
 	}
 }

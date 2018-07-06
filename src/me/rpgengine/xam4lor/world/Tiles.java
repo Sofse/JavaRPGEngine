@@ -162,7 +162,7 @@ public class Tiles {
 			if(this.backgroundTileID != -1)
 				tilesList.get(this.backgroundTileID).renderSprite(renderer, xPosition, yPosition, xZoom, yZoom);
 			
-			renderer.renderSprite(this.sprite, xPosition, yPosition, xZoom, yZoom, this.zIndex);
+			renderer.renderSprite(this.sprite, xPosition, yPosition, xZoom, yZoom, this.zIndex, false);
 		}
 
 
@@ -180,6 +180,13 @@ public class Tiles {
 		 */
 		public boolean isSolid() {
 			return this.solid;
+		}
+
+		/**
+		 * @return la sprite de la tile
+		 */
+		public Sprite getSprite() {
+			return this.sprite;
 		}
 	}
 }

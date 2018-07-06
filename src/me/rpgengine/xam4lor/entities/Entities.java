@@ -1,5 +1,6 @@
 package me.rpgengine.xam4lor.entities;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -10,9 +11,10 @@ import me.rpgengine.xam4lor.engine.render.RenderHandler;
 import me.rpgengine.xam4lor.engine.render.sprites.AnimatedSprite;
 import me.rpgengine.xam4lor.engine.render.sprites.SpriteSheet;
 import me.rpgengine.xam4lor.engine.structure.GameObject;
-import me.rpgengine.xam4lor.entities.idleEntities.npc.IdleNPC;
-import me.rpgengine.xam4lor.entities.movingEntities.npc.WalkerNPC;
-import me.rpgengine.xam4lor.entities.movingEntities.player.Player;
+import me.rpgengine.xam4lor.entities.generic.Entity;
+import me.rpgengine.xam4lor.entities.npc.idle.IdleNPC;
+import me.rpgengine.xam4lor.entities.npc.moving.WalkerNPC;
+import me.rpgengine.xam4lor.entities.player.Player;
 
 /**
  * Liste des entités
@@ -45,6 +47,9 @@ public class Entities implements GameObject {
 		}
 	}
 	
+	@Override
+	public void postRender(Graphics graphics, int xZoom, int yZoom) {}
+	
 	
 	
 	/**
@@ -64,9 +69,9 @@ public class Entities implements GameObject {
 		
 		// Chargement de l'entité
 		if(entityObject.getString("type").equals("WalkerNPC"))
-			this.entities.add(new WalkerNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y")));
+			this.entities.add(new WalkerNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y"), entityObject.getJSONObject("options")));
 		else if(entityObject.getString("type").equals("IdleNPC"))
-			this.entities.add(new IdleNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y")));
+			this.entities.add(new IdleNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y"), entityObject.getJSONObject("options")));
 	}
 	
 
@@ -76,14 +81,16 @@ public class Entities implements GameObject {
 	 * 	Position en X
 	 * @param y
 	 * 	Position en Y
+	 * @param speed
+	 * 	Vitesse de déplacement du joueur
 	 */
-	public void addPlayer(int x, int y) {
+	public void addPlayer(int x, int y, int speed) {
 		BufferedImage playerSheetImage = this.game.loadImage("Player.png");
 		SpriteSheet playerSheet = new SpriteSheet(playerSheetImage);
 		playerSheet.loadSprites(20, 26);
 	
 		AnimatedSprite playerAnim = new AnimatedSprite(playerSheet, 5);
-		Player player = new Player(playerAnim);
+		Player player = new Player(playerAnim, speed);
 		player.setPosition(this.game, x, y);
 		
 		this.entities.add(player);
@@ -94,5 +101,12 @@ public class Entities implements GameObject {
 	 */
 	public void clearEntities() {
 		this.entities.clear();
+	}
+	
+	/**
+	 * @return la liste des entités
+	 */
+	public ArrayList<Entity> getEntities() {
+		return entities;
 	}
 }

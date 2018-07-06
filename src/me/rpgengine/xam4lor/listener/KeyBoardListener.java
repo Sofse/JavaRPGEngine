@@ -83,6 +83,16 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 	
 	
 	
+	/**
+	 * @param keyID
+	 * 	ID de la touche (KeyEvent.x)
+	 * @return true si la touche est pressée
+	 */
+	public boolean isKeyPressed(int keyID) {
+		return keys[keyID];
+	}
+	
+	
 	
 	
 	@Override
