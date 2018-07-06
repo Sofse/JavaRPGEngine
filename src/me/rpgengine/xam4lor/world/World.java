@@ -31,6 +31,10 @@ public class World implements GameObject {
 	private GUIContainer gui;
 	
 	private boolean worldUpdating;
+	
+	private boolean worldChanging;
+	private boolean shouldWorldChange;
+	private File worldChangingFile;
 
 	/**
 	 * Création d'un monde
@@ -45,7 +49,9 @@ public class World implements GameObject {
 		this.entities = new Entities(game);
 		this.gui = new GUIContainer(game, tileSet);
 		
+		this.worldChanging = true;
 		this.loadWorld(mapFile);
+		this.worldChanging = false;
 		
 		this.worldUpdating = true;
 	}
@@ -76,6 +82,26 @@ public class World implements GameObject {
 	}
 	
 	
+	/**
+	 * Charge un autre monde
+	 * @param mapFile
+	 * 	Fichier du monde
+	 */
+	public void changeWorld(File mapFile) {
+		this.worldChangingFile = mapFile;
+		this.shouldWorldChange = true;		
+	}
+	
+	/**
+	 * Chargement du monde
+	 * @param worldName
+	 * 	Nom du monde
+	 */
+	public void changeWorld(String worldName) {
+		this.changeWorld(new File("res/config/levels/" + worldName + ".txt"));
+	}
+	
+	
 	
 	
 	/**
@@ -85,6 +111,8 @@ public class World implements GameObject {
 	 */
 	public void loadWorld(File mapFile) {
 		this.mappedTiles = new ArrayList<MappedTile>();
+		this.shouldWorldChange = false;
+		this.worldChanging = true;
 		
 		try {
 			JSONObject level = new JSONObject(new String(Files.readAllBytes(mapFile.toPath()), "UTF-8"));
@@ -113,15 +141,8 @@ public class World implements GameObject {
 		catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Chargement du monde
-	 * @param worldName
-	 * 	Nom du monde
-	 */
-	public void loadWorld(String worldName) {
-		this.loadWorld(new File("res/config/levels/" + worldName + ".txt"));
+		
+		this.worldChanging = false;
 	}
 	
 	
@@ -315,5 +336,26 @@ public class World implements GameObject {
 	 */
 	public Entities getEntities() {
 		return entities;
+	}
+	
+	/**
+	 * @return true si le monde est en train de changer
+	 */
+	public boolean isWorldChanging() {
+		return worldChanging;
+	}
+	
+	/**
+	 * @return true si le monde doit changer
+	 */
+	public boolean shouldWorldChange() {
+		return this.shouldWorldChange;
+	}
+	
+	/**
+	 * @return le fichier du nouveau monde
+	 */
+	public File getWorldChangingFile() {
+		return worldChangingFile;
 	}
 }

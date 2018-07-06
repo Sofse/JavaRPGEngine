@@ -40,12 +40,10 @@ public class Player extends MovingEntity {
 		if(t != null && t.getID() == 81) { // stairs_0_0_1
 			try {
 				JSONObject config = t.getOptions();
-				game.getWorld().loadWorld(config.getString("loadLevel"));
+				game.getWorld().changeWorld(config.getString("loadLevel"));
 			}
 			catch(JSONException e) {}
 		}
-			
-		// TODO si sur escalier, changer level en fct propriétés tile
 		
 		this.updateCamera(game.getRenderer().getCamera());
 	}

@@ -1,12 +1,10 @@
 package me.rpgengine.xam4lor.entities.generic;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.rpgengine.xam4lor.engine.Game;
 import me.rpgengine.xam4lor.engine.render.sprites.AnimatedSprite;
-import me.rpgengine.xam4lor.engine.structure.Rectangle;
 import me.rpgengine.xam4lor.world.Tiles;
 import me.rpgengine.xam4lor.world.World.MappedTile;
 
@@ -19,16 +17,13 @@ public abstract class MovingEntity extends Entity {
 	 */
 	protected int speed;
 	
-	
-	private int[] targets;
-	protected int targetID;
-	private int numberMovePerTarget;
-	private int numberMoveCurrent;
+	protected boolean movedLastUpdate;
+	protected boolean collisionLastUpdate;
+	protected int targetX;
+	protected int targetY;
 	
 	private int lastDir;
 	private long lastDeplacementChanged;
-	private int targetX;
-	private int targetY;
 	
 	
 	
@@ -59,6 +54,8 @@ public abstract class MovingEntity extends Entity {
 		
 		this.targetX = 0;
 		this.targetY = 0;
+		this.movedLastUpdate = false;
+		this.collisionLastUpdate = false;
 		
 		this.speed = 1;
 		try {
@@ -66,26 +63,6 @@ public abstract class MovingEntity extends Entity {
 				this.speed = this.options.getInt("speed");
 		}
 		catch(JSONException e) {}
-		
-		
-		this.targets = new int[0];
-		this.targetID = -1;
-		this.numberMovePerTarget = 1;
-		try {
-			if(this.options != null) {
-				JSONObject path = this.options.getJSONObject("path");
-				JSONArray targets = path.getJSONArray("targets");
-				
-				this.targets = new int[targets.length()];
-				for (int i = 0; i < targets.length(); i++) {
-					this.targets[i] = targets.getInt(i);
-				}
-				this.numberMovePerTarget = path.getInt("numberMovePerTarget");
-			}
-		}
-		catch(JSONException e) {}
-		
-		
 	}
 	
 	
@@ -95,6 +72,10 @@ public abstract class MovingEntity extends Entity {
 		boolean move = false;
 		long now = System.currentTimeMillis();
 		
+		this.movedLastUpdate = false;
+		this.collisionLastUpdate = false;
+		
+		// check des déplacements
 		if(dir != -1 && (dir == lastDir || (dir != lastDir && now - lastDeplacementChanged > 150))) {
 			switch(dir) {
 				case 0:
@@ -128,19 +109,33 @@ public abstract class MovingEntity extends Entity {
 			lastDeplacementChanged = now;
 		}
 		
+		
+		// reinitialisation des sprites
 		if(this.targetX == 0 && this.targetY == 0)
 			this.animatedSprite.reset();
 		
 		
-		Entity entity = this.colideWithEntity(game);
-		if(entity != null)
+		// check si mouvement possible
+		Entity entity = this.colideWithEntity(game, this.currentX + this.targetX, this.currentY + this.targetY);
+		if(entity != null) {
+			this.collisionLastUpdate = true;
+			this.targetX = 0;
+			this.targetY = 0;
 			entity.onCollideWithEntity(game, this);
-		else
-			if(!this.isTileSolid(game, this.currentX + this.targetX, this.currentY + this.targetY))
+		}
+		else {
+			if(!this.isTileSolid(game, this.currentX + this.targetX, this.currentY + this.targetY)) {
 				move = true;
-		
-		
+			}
+			else {
+				this.collisionLastUpdate = true;
+				this.targetX = 0;
+				this.targetY = 0;
+			}
+		}
+			
 		if(move) {
+			// mouvement
 			if(this.targetX != 0) {
 				float realX = (float) this.entityRectangle.x / Tiles.TILE_SIZE / game.xZoom;
 				float targetTempX = (float) this.currentX + this.targetX;
@@ -152,6 +147,7 @@ public abstract class MovingEntity extends Entity {
 						move = false;
 					}
 					else {
+						this.movedLastUpdate = true;
 						this.entityRectangle.x += this.speed * this.targetX;
 					}
 				}
@@ -163,6 +159,7 @@ public abstract class MovingEntity extends Entity {
 						move = false;
 					}
 					else {
+						this.movedLastUpdate = true;
 						this.entityRectangle.x += this.speed * this.targetX;
 					}
 				}
@@ -179,6 +176,7 @@ public abstract class MovingEntity extends Entity {
 						move = false;
 					}
 					else {
+						this.movedLastUpdate = true;
 						this.entityRectangle.y += this.speed * this.targetY;
 					}
 				}
@@ -190,6 +188,7 @@ public abstract class MovingEntity extends Entity {
 						move = false;
 					}
 					else {
+						this.movedLastUpdate = true;
 						this.entityRectangle.y += this.speed * this.targetY;
 					}
 				}
@@ -199,19 +198,20 @@ public abstract class MovingEntity extends Entity {
 			this.animatedSprite.reset();
 		}
 		
+		// correction de la position actuelle
 		if(this.targetX == 0 && this.targetY == 0) {
 			this.entityRectangle.x = this.currentX * Tiles.TILE_SIZE * game.xZoom;
 			this.entityRectangle.y = this.currentY * Tiles.TILE_SIZE * game.yZoom;
 		}
 		
-
+		
+		// direction
 		if(dir != this.lastDirection && dir != -1)
 			this.setDirection(dir);
 		
+		// textures
 		if(move)
 			this.animatedSprite.update(game);
-		
-		// TODO chemin de déplacements + collision d'entité nouvelle
 	}
 	
 	
@@ -223,18 +223,10 @@ public abstract class MovingEntity extends Entity {
 	 * 	Instance de jeu
 	 * @return l'entité si celle en instance collide avec une autre / retourne null
 	 */
-	private Entity colideWithEntity(Game game) {
+	private Entity colideWithEntity(Game game, int x, int y) {
 		for (Entity entity : game.getWorld().getEntities().getEntities()) {
-			if(!entity.getName().equals(this.getName())) {
-				Rectangle r = entity.getEntityRectangle();
-				
-				if(
-					   this.entityRectangle.x - this.entityRectangle.w * game.xZoom	< r.x
-				   	&& this.entityRectangle.x + this.entityRectangle.w * game.xZoom	> r.x
-					&& this.entityRectangle.y - this.entityRectangle.h * game.yZoom	< r.y
-					&& this.entityRectangle.y										> r.y - r.h * game.yZoom
-				)
-					return entity;
+			if(!entity.getName().equals(this.getName()) && entity.currentX == x && entity.currentY == y) {
+				return entity;
 			}
 		}
 		
@@ -366,9 +358,6 @@ public abstract class MovingEntity extends Entity {
 	
 	@Override
 	protected int getMovingDirection(Game game) {
-		if(this.targetID != -1)
-			return this.targets[targetID];
-		
 		return -1;
 	}
 	

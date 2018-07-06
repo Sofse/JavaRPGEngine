@@ -72,7 +72,7 @@ public class Game extends JFrame implements Runnable {
 		this.createWindow();
 		this.loadAssetsAndTiles();
 
-		world = new World(this, new File("res/config/levels/testLevel.txt"), tiles);
+		world = new World(this, new File("res/config/levels/house_hero_E1.txt"), tiles);
 		
 
 		//Add Listeners
@@ -92,11 +92,13 @@ public class Game extends JFrame implements Runnable {
 		BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 		Graphics graphics = bufferStrategy.getDrawGraphics();
 		super.paint(graphics);
-
-		this.world.render(renderer, xZoom, yZoom);
-		renderer.render(graphics);
 		
-		this.world.postRender(graphics, xZoom, yZoom);
+		if(!this.world.isWorldChanging()) {
+			this.world.render(renderer, xZoom, yZoom);
+			renderer.render(graphics);
+			
+			this.world.postRender(graphics, xZoom, yZoom);
+		}
 
 		graphics.dispose();
 		bufferStrategy.show();
@@ -107,7 +109,11 @@ public class Game extends JFrame implements Runnable {
 	 * Fonction d'update du jeu
 	 */
 	public void update() {
-		this.world.update(this);
+		if(!this.world.isWorldChanging() && !this.world.shouldWorldChange()) {
+			this.world.update(this);
+		}
+		else if(this.world.shouldWorldChange())
+			this.world.loadWorld(this.world.getWorldChangingFile());
 	}
 	
 	
@@ -122,12 +128,7 @@ public class Game extends JFrame implements Runnable {
 	 * @param keys
 	 * 	Liste des touches selectionnées
 	 */
-	public void handleCTRL(boolean[] keys) {
-		if(this.world.getWorldName().equals("testLevel")) // TODO Provisoire
-			this.world.loadWorld("testLevel2.txt");
-		else
-			this.world.loadWorld("testLevel.txt");
-	}
+	public void handleCTRL(boolean[] keys) {}
 
 	/**
 	 * Lors d'un click gauche de la souris
@@ -136,9 +137,7 @@ public class Game extends JFrame implements Runnable {
 	 * @param y
 	 * 	Position en Y absolue
 	 */
-	public void leftClick(int x, int y) {
-		// TODO : this.getWorld().getGUIContainer().showGUI(0, true);
-	}
+	public void leftClick(int x, int y) {}
 
 	/**
 	 * Lors d'un click droit de la souris

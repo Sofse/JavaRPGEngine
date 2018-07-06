@@ -69,9 +69,9 @@ public class Entities implements GameObject {
 		
 		// Chargement de l'entité
 		if(entityObject.getString("type").equals("WalkerNPC"))
-			this.entities.add(new WalkerNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y"), entityObject.getJSONObject("options")));
+			this.addEntity(new WalkerNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y"), entityObject.getJSONObject("options")), entityObject.getInt("x"), entityObject.getInt("y"));
 		else if(entityObject.getString("type").equals("IdleNPC"))
-			this.entities.add(new IdleNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y"), entityObject.getJSONObject("options")));
+			this.addEntity(new IdleNPC(entityObject.getString("name"), animatedSprite, entityObject.getInt("x"), entityObject.getInt("y"), entityObject.getJSONObject("options")), entityObject.getInt("x"), entityObject.getInt("y"));
 	}
 	
 
@@ -94,6 +94,20 @@ public class Entities implements GameObject {
 		player.setPosition(this.game, x, y);
 		
 		this.entities.add(player);
+	}
+	
+	/**
+	 * Ajout d'une entité
+	 * @param entity
+	 * 	Entité
+	 * @param x
+	 * 	Position en X
+	 * @param y
+	 * 	Position en Y
+	 */
+	public void addEntity(Entity entity, int x, int y) {
+		entity.setPosition(this.game, x, y);
+		this.entities.add(entity);
 	}
 	
 	/**

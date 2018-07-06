@@ -110,7 +110,7 @@ public abstract class Entity implements GameObject {
 		this.options = options;
 		this.lastDirection = -1;
 		
-		this.entityRectangle = new Rectangle(xInit, yInit, width, height);
+		this.entityRectangle = new Rectangle(0, 0, width, height);
 		this.entityRectangle.generateGraphics(1, 0xFF00FF90);
 	}
 
@@ -161,6 +161,8 @@ public abstract class Entity implements GameObject {
 	public void setPosition(Game game, int x, int y) {
 		this.entityRectangle.x = x * game.xZoom * Tiles.TILE_SIZE;
 		this.entityRectangle.y = y * game.yZoom * Tiles.TILE_SIZE;
+		this.currentX = x;
+		this.currentY = y;
 	}
 	
 	
