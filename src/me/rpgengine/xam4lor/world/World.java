@@ -19,7 +19,7 @@ import me.rpgengine.xam4lor.entities.Entities;
 import me.rpgengine.xam4lor.world.Tiles.Tile;
 
 /**
- * Création d'un monde
+ * CrÃ©ation d'un monde
  */
 public class World implements GameObject {
 	private Tiles tileSet;
@@ -37,7 +37,7 @@ public class World implements GameObject {
 	private File worldChangingFile;
 
 	/**
-	 * Création d'un monde
+	 * CrÃ©ation d'un monde
 	 * @param game
 	 * @param mapFile
 	 * 	Fichier du monde de base
@@ -129,7 +129,7 @@ public class World implements GameObject {
 				mappedTiles.add(new MappedTile(tile.getInt("id"), tile.getInt("x"), tile.getInt("y"), tile.has("options") ? tile.getJSONObject("options") : null));
 			}
 			
-			// Ajout des entités
+			// Ajout des entitÃ©s
 			this.entities.clearEntities();
 			
 			JSONObject player = entities.getJSONObject("player");
@@ -211,7 +211,7 @@ public class World implements GameObject {
 	 * 	Position en X
 	 * @param tileY
 	 * 	Position en Y
-	 * @return la MappedTile à la position
+	 * @return la MappedTile Ã  la position
 	 */
 	public MappedTile getTileAt(int tileX, int tileY) {
 		for (MappedTile mappedTile : this.mappedTiles)
@@ -259,7 +259,7 @@ public class World implements GameObject {
 		 * @param y 
 		 * 	Position en Y de la mappedTile
 		 * @param options
-		 * 	Configuration de la mappedTile : null pour sans configuration particulière
+		 * 	Configuration de la mappedTile : null pour sans configuration particuliÃ¨re
 		 */
 		public MappedTile(int id, int x, int y, JSONObject options) {
 			this.id = id;
@@ -296,7 +296,7 @@ public class World implements GameObject {
 	
 	
 	/**
-	 * @return la tile par défault (tile créée lors du premier appel à cette fonction)
+	 * @return la tile par dÃ©fault (tile crÃ©Ã©e lors du premier appel Ã  cette fonction)
 	 */
 	public int getDefaultTileID() {
 		return this.fillTileID;
@@ -332,7 +332,7 @@ public class World implements GameObject {
 	}
 	
 	/**
-	 * @return la liste des entités
+	 * @return la liste des entitÃ©s
 	 */
 	public Entities getEntities() {
 		return entities;
@@ -357,5 +357,11 @@ public class World implements GameObject {
 	 */
 	public File getWorldChangingFile() {
 		return worldChangingFile;
+	}
+	
+	//Logique
+	public void helloWorld()
+	{
+		//Hello?
 	}
 }
