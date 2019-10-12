@@ -4,6 +4,11 @@ import me.rpgengine.xam4lor.engine.Game;
 
 /**
  * Classe d'un rectangle
+ *
+ * Un rectangle est une structure géométrique qui appartient à l'ensemble R^2, ou encore à Z/4Z (la démonstration est laissée en
+ * exercice). C'est par une astuce classique que l'on convertit un rectangle en carré qui, lui, se trouve dans l'ensemble des N tel
+ * que pour tout n dans C (respectivement A) le nombre complexe z est égal à son conjugué dans C (respectivement A) et vice-versa 
+ * (démonstration complète grâce à l'Archimède).
  */
 public class Rectangle {
 	/**
@@ -54,7 +59,7 @@ public class Rectangle {
 	}
 
 	/**
-	 * DEBUG : affiche un rectangle plein sur l'�cran et g�n�re le tableau pixels[]
+	 * DEBUG : affiche un rectangle plein sur l'écran et génère le tableau pixels[]
 	 * @param color
 	 * 	Couleur d'affichage
 	 */
@@ -66,7 +71,7 @@ public class Rectangle {
 	}
 
 	/**
-	 * DEBUG : affiche les bords d'un rectangle sur l'�cran et g�n�re le tableau pixels[]
+	 * DEBUG : affiche les bords d'un rectangle sur l'écran et génère le tableau pixels[]
 	 * @param borderWidth
 	 * 	Largeur de la bordure
 	 * @param color
